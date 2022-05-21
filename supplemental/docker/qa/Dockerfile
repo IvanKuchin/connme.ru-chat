@@ -22,15 +22,7 @@ RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 	&& mkdir build \
 	&& cd build \
 	&& cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
-	&& make install \
-
-	&& apt remove --purge -y \
-	    build-essential \
-	    cmake \
-	    git \
-	&& apt autoremove -y \
-	&& apt clean
-
+	&& make install
 
 ############################################################################################
 
