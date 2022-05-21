@@ -1,1 +1,1 @@
-# connme.ru
+# chat deployed on the web-site
