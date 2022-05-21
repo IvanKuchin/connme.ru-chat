@@ -1,5 +1,14 @@
 FROM ubuntu:xenial as libwebsocket
 
+ARG BUILD_REPO
+
+###########################################
+# check if all mandatory args are defined #
+###########################################
+RUN [ -z "$BUILD_REPO" ] && echo "BUILD_REPO is required" && exit 1 || true
+RUN echo repository is $BUILD_REPO
+
+
 RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 	    build-essential \
 	    ca-certificates \
@@ -96,10 +105,14 @@ RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
 # build from source #
 ##################### 
 RUN mkdir build
-RUN cd build && \
-    cmake -DMAIN_SUBDOMAIN=www -DIMAGE_SUBDOMAIN=images .. && \
-    make -j2 && \
-    make install
+RUN cd build \
+    && cmake \
+       -DPROJECT_NAME=${BUILD_REPO} \
+       -DMAIN_SUBDOMAIN=www \
+       -DIMAGE_SUBDOMAIN=images \
+       .. \
+    && make -j2 \
+    && make install
 
 ###########################
 # test connectivity to DB #
