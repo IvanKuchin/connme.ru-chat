@@ -47,12 +47,13 @@ jobs:
       # Start deployment       #
       ##########################
       - name: start deployment
-        uses: bobheadxi/deployments@v0.4.3
+        uses: bobheadxi/deployments@v1
         id: deployment
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
           env: release
+          desc: "depl_id: ${{ github.event.deployment.id }}, ref_id: ${{ github.head_ref }}"
 
      #############################
      # Init deployment variables #
@@ -135,76 +136,19 @@ jobs:
           target: app
           push: true
           tags: |
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-app:${{ steps.set_variables.outputs.BUILD_RELEASE }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-app:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-app:latest
-
-      - name: Build and push
-        if: success()
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./supplemental/docker/prod/Dockerfile
-          build-args: |
-            BUILD_DATE=${{ env.BUILD_DATE }}
-            BUILD_REVISION=${{ github.sha }}
-            BUILD_VERSION=${{ github.sha }}
-            BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-            BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
-          target: images
-          push: true
-          tags: |
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-images:${{ steps.set_variables.outputs.BUILD_RELEASE }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-images:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-images:latest
-
-      - name: Build and push
-        if: success()
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./supplemental/docker/prod/Dockerfile
-          build-args: |
-            BUILD_DATE=${{ env.BUILD_DATE }}
-            BUILD_REVISION=${{ github.sha }}
-            BUILD_VERSION=${{ github.sha }}
-            BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-            BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
-          target: cron
-          push: true
-          tags: |
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-cron:${{ steps.set_variables.outputs.BUILD_RELEASE }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-cron:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-cron:latest
-
-      - name: Build and push
-        if: success()
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./supplemental/docker/prod/Dockerfile
-          build-args: |
-            BUILD_DATE=${{ env.BUILD_DATE }}
-            BUILD_REVISION=${{ github.sha }}
-            BUILD_VERSION=${{ github.sha }}
-            BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-            BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
-          target: chat
-          push: true
-          tags: |
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-chat:${{ steps.set_variables.outputs.BUILD_RELEASE }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-chat:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-chat:latest
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}:${{ steps.set_variables.outputs.BUILD_RELEASE }}
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}:latest
 
       ##########################
       # Stop deployment        #
       ##########################
       - name: update deployment status
-        uses: bobheadxi/deployments@v0.4.3
+        uses: bobheadxi/deployments@v1
         if: always()
         with:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
+          env: ${{ steps.deployment.outputs.env }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-
