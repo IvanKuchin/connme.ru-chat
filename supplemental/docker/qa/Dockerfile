@@ -107,7 +107,7 @@ RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
 RUN mkdir build
 RUN cd build \
     && cmake \
-       -DPROJECT_NAME=${BUILD_REPO} \
+       -DPROJECT_NAME=__BUILD_REPO__ \
        -DMAIN_SUBDOMAIN=www \
        -DIMAGE_SUBDOMAIN=images \
        .. \
