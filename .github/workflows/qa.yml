@@ -124,7 +124,7 @@ jobs:
                        .
           docker build -f ./supplemental/docker/qa/Dockerfile \
                        -t qa_testing:${{ github.sha }} \
-                       BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }} \
+                       --build-arg BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }} \
                        .
           docker image ls
           docker network ls
