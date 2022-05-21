@@ -111,8 +111,7 @@ RUN cd build \
        -DMAIN_SUBDOMAIN=www \
        -DIMAGE_SUBDOMAIN=images \
        .. \
-    && make -j2 \
-    && make install
+    && make -j2
 
 ###########################
 # test connectivity to DB #
