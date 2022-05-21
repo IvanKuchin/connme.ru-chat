@@ -1,2 +1,2 @@
-# chat deployed on the web-site
+# Backend part of chat application runs on a backend
 

@@ -1,5 +1,14 @@
 FROM ubuntu:xenial as libwebsocket
 
+ARG BUILD_REPO
+
+###########################################
+# check if all mandatory args are defined #
+###########################################
+RUN [ -z "$BUILD_REPO" ] && echo "BUILD_REPO is required" && exit 1 || true
+RUN echo repository is $BUILD_REPO
+
+
 RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 	    build-essential \
 	    ca-certificates \
@@ -13,15 +22,7 @@ RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 	&& mkdir build \
 	&& cd build \
 	&& cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
-	&& make install \
-
-	&& apt remove --purge -y \
-	    build-essential \
-	    cmake \
-	    git \
-	&& apt autoremove -y \
-	&& apt clean
-
+	&& make install
 
 ############################################################################################
 
@@ -96,10 +97,13 @@ RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
 # build from source #
 ##################### 
 RUN mkdir build
-RUN cd build && \
-    cmake -DMAIN_SUBDOMAIN=www -DIMAGE_SUBDOMAIN=images .. && \
-    make -j2 && \
-    make install
+RUN cd build \
+    && cmake \
+       -DPROJECT_NAME=__BUILD_REPO__ \
+       -DMAIN_SUBDOMAIN=www \
+       -DIMAGE_SUBDOMAIN=images \
+       .. \
+    && make -j2
 
 ###########################
 # test connectivity to DB #
