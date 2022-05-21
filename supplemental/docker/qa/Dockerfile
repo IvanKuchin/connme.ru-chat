@@ -40,11 +40,6 @@ LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/__BUILD_REP
 # following two commands suppose to be reused from cache
 RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates
 
-##########################
-# copy from libwebsocket #
-##########################
-COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
-
 COPY . /backend
 WORKDIR /backend
 RUN git clone --depth 1 https://github.com/IvanKuchin/backend_pi.git ./src/pi
@@ -92,6 +87,11 @@ RUN apt install -f --no-install-recommends --no-install-suggests -y
 # save commit id #
 ##################
 RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
+
+##########################
+# copy from libwebsocket #
+##########################
+COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
 
 ##################### 
 # build from source #
