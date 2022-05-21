@@ -1,1 +1,1 @@
-# Backend part of chat application
+# Backend part of web-chat application
