@@ -119,6 +119,7 @@ add_subdirectory(supplemental/git/)
 add_subdirectory(supplemental/config/)
 add_subdirectory(supplemental/init_d/)
 add_subdirectory(po/)
+add_subdirectory(templates/) # templates folder required, when user loaded from DB (CUser::isAllowedLng)
 
 # --- Install time
 install(DIRECTORY DESTINATION ${LOG_DIR} COMPONENT infra DIRECTORY_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_WRITE GROUP_READ WORLD_EXECUTE WORLD_WRITE WORLD_READ)
