@@ -126,7 +126,7 @@ RUN mkdir build \
         -DIMAGEROOTDIR=${IMAGEROOTDIR} \
         -DLOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR} \
         -DBUILD_RELEASE_NUMBER=${BUILD_RELEASE_NUMBER} \
-        -DFFPMPEG_DISABLE=true \
+        -DFFMPEG_DISABLE=true \
         -DMAXMIND_DISABLE=true \
         .. \
     && make -j2 package
