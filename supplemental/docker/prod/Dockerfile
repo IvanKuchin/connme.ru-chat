@@ -133,7 +133,7 @@ RUN mkdir build \
 
 ############################################################################################
 
-FROM base as app
+FROM base as app-nossl
 
 ARG BUILD_REPO
 ARG MAIN_SUBDOMAIN
@@ -158,6 +158,21 @@ COPY --from=build ${GIT_FOLDER}/build/${BUILD_REPO}-chat.deb ./
 RUN apt update \
     && apt install  --no-install-recommends --no-install-suggests -y ./*.deb \
     && rm -rf /var/lib/apt/lists/*
+
+WORKDIR ${LOCAL_INSTALL_DIR}/chat
+CMD ["./chat-server"]
+
+############################################################################################
+
+FROM app-nossl as app
+
+ARG BUILD_REPO
+ARG MAIN_SUBDOMAIN
+ARG IMAGE_SUBDOMAIN
+ARG ROOTDIR
+ARG IMAGEROOTDIR
+ARG LOCAL_INSTALL_DIR
+ARG BUILD_RELEASE_NUMBER
 
 WORKDIR ${LOCAL_INSTALL_DIR}/chat
 CMD ["./chat-server", "-s"]
